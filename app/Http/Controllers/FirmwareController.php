@@ -42,18 +42,6 @@ class FirmwareController extends Controller
         //
         return view('firmwares.create');
     }
-    public function compilar()
-    {
-        //
-
-        $process = new Process(['ls', '-lsa']);
-        $process->start();
-        $iterator = $process->getIterator($process::ITER_SKIP_ERR | $process::ITER_KEEP_OUTPUT);
-        foreach ($iterator as $data) {
-            echo $data."<br/>";
-        }
-        return view('firmwares.compilar');
-    }
 
     public function listar()
     {
@@ -81,7 +69,7 @@ class FirmwareController extends Controller
             $namefile = "{$name}.{$ext}";
             $upload = $request->logo->move(public_path('logos'), $namefile);
             //$upload =$request->logo->storeAs('logos', $namefile);
-            $path_to_logo = storage_path("/logos/".$namefile);
+            $path_to_logo = storage_path("logos/".$namefile);
 
             if(!$upload)
                 return redirect()
@@ -93,23 +81,7 @@ class FirmwareController extends Controller
             if($request->firmwarezip->getClientOriginalExtension() == "zip"){
                 $upload = $request->file('firmwarezip')->storeAs('firmwares', $name.".zip");
                 $path_to_firmware = $name.".zip";// salva somente o nome
-                // dd(Storage::get("/firmwares/".$name.".zip"));
             }
-
-
-        //     $name = uniqid(date('HisYmd'));
-        //     $ext = $request->logo->getClientOriginalExtension();
-        //     $namefile = "{$name}.{$ext}";
-        //     $upload = $request->logo->move(public_path('logos'), $namefile);
-        //     //$upload =$request->logo->storeAs('logos', $namefile);
-        //     $path_to_firmware = storage_path("/logos/".$namefile);
-        //     // var_dump(Storage::put('logosteste', $request->logo));
-        //     // die();
-
-        //     if(!$upload)
-        //         return redirect()
-        //                 ->back()
-        //                 ->with('error','Falha no upload');
         }
         
         $request->validate([
@@ -227,6 +199,9 @@ class FirmwareController extends Controller
     {
         //
         $firm = Firmware::find($id);
+        
+        dd(unlink(public_path("logos/002252202002095e3f50dc4338d.jpg")));
+        
         $firm->delete();
 
         return redirect('/firmwares')->with('success', 'Firmware deletado');

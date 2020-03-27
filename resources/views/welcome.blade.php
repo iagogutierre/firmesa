@@ -95,23 +95,11 @@
                 <div class="title m-b-md">
                     Firmesa
                 </div>
-
-           <!--      <div class="links">
-                    <a href="https://laravel.com/docs">Docs</a>
-                    <a href="https://laracasts.com">Laracasts</a>
-                    <a href="https://laravel-news.com">News</a>
-                    <a href="https://blog.laravel.com">Blog</a>
-                    <a href="https://nova.laravel.com">Nova</a>
-                    <a href="https://forge.laravel.com">Forge</a>
-                    <a href="https://github.com/laravel/laravel">GitHub</a>
-                </div>
- -->
+           
             <header class="jumbotron my-4">
-                
-             <!--      <h1 class="display-3">A Warm Welcome!</h1> -->
-                  <p class="lead">Personalize firmware baseados em LibreMesh para redes 
+                  <p class="lead">Crie kits de instalação para redes mesh utilizando LibreMesh
                   comunitárias e aplicações IoT.</p>
-                  <a href="{{ route('gerarkit') }}" class="btn btn-primary btn-lg">Gerar Firmware!</a>
+                  <a href="{{ route('gerarkit') }}" class="btn btn-primary btn-lg">Gerar Kit!</a>
                                
             </header>
             </div>
