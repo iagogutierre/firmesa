@@ -69,7 +69,7 @@ class FirmwareController extends Controller
             $namefile = "{$name}.{$ext}";
             $upload = $request->logo->move(public_path('logos'), $namefile);
             //$upload =$request->logo->storeAs('logos', $namefile);
-            $path_to_logo = storage_path("logos/".$namefile);
+            $path_to_logo = "logos/".$namefile;
 
             if(!$upload)
                 return redirect()
@@ -200,8 +200,9 @@ class FirmwareController extends Controller
         //
         $firm = Firmware::find($id);
         
-        dd(unlink(public_path("logos/002252202002095e3f50dc4338d.jpg")));
         
+        //dd(unlink(public_path("logos/002252202002095e3f50dc4338d.jpg")));
+        dd(unlink(public_path("logos/161134202002195e4d5e3695073.png")));
         $firm->delete();
 
         return redirect('/firmwares')->with('success', 'Firmware deletado');
