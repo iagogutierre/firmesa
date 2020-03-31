@@ -32,19 +32,19 @@
                     <div class="form-group">
                         <div class="input-group input-group-md">
                             <div class="icon-addon addon-md">
-                                <input type="text" placeholder="O que você esta buscando?" class="form-control"  v-model="query">
+                                <input type="text" id="busca_firmware" placeholder="O que você esta buscando?" class="form-control"  v-model="query">
                                 <ul id="resultados" class="list-group">
                                     <li class="list-group-item" v-for="firmware in firmwares">
+                                    <a v-bind:href="'firmwares/'+firmware.id">
                                         @{{firmware.manufacture}} @{{firmware.model}} @{{firmware.version}}
+                                    </a>
                                     </li>
                                 </ul>
                             </div>
                             <span class="input-group-btn">
                                 <button class="btn btn-default" type="button" @click="search" v-if="!loading">Buscar!</button>
                                 <button class="btn btn-default" type="button" disabled="disabled" v-if="loading">Buscando...</button>
-
                             </span>
-                            
                         </div>
                     </div>
                 </div>
@@ -88,7 +88,6 @@
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
                                     </a>
-
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
                                     </form>
@@ -100,7 +99,6 @@
                 </div>
             </div>
         </nav>
-
         <main class="py-4">
             @yield('content')
         </main>

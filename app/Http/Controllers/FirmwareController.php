@@ -202,7 +202,10 @@ class FirmwareController extends Controller
         
         
         //dd(unlink(public_path("logos/002252202002095e3f50dc4338d.jpg")));
-        dd(unlink(public_path("logos/161134202002195e4d5e3695073.png")));
+        //dd(unlink(public_path("logos/161134202002195e4d5e3695073.png")));
+        //unlink(public_path($firm->path_to_logo));# remove o arquivo de firmware 
+        dd(unlink(storage_path('app/public/firmwares/'.$firm->path_to_firmware)));#remove o firmware 
+        
         $firm->delete();
 
         return redirect('/firmwares')->with('success', 'Firmware deletado');
