@@ -76,7 +76,6 @@ class FirmwareController extends Controller
                         ->back()
                         ->with('error','Falha no upload');
         }
-
         if($request->hasFile('firmwarezip') && $request->file('firmwarezip')->isValid()){
             if($request->firmwarezip->getClientOriginalExtension() == "zip"){
                 $upload = $request->file('firmwarezip')->storeAs('firmwares', $name.".zip");
@@ -204,8 +203,8 @@ class FirmwareController extends Controller
         //dd(unlink(public_path("logos/002252202002095e3f50dc4338d.jpg")));
         //dd(unlink(public_path("logos/161134202002195e4d5e3695073.png")));
         //unlink(public_path($firm->path_to_logo));# remove o arquivo de firmware 
-        dd(unlink(storage_path('app/public/firmwares/'.$firm->path_to_firmware)));#remove o firmware 
-        
+        unlink(public_path($firm->path_to_logo)); # remove arquivo de firmware
+        unlink(public_path('app/public/firmwares/'.$firm->path_to_firmware)); #remove firmware 
         $firm->delete();
 
         return redirect('/firmwares')->with('success', 'Firmware deletado');
