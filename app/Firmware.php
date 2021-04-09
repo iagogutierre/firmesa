@@ -9,8 +9,8 @@ class Firmware extends Model
 {
     //
      protected $fillable = [
-        'user_id', 'version','model', 'manufacture','logo', 'potency','antenna', 
-        'range','band','wan','memory','ip','config_interface','path_to_firmware',"path_to_logo"
+        'user_id', 'name', 'equipment_id', 'version','description', 
+        'ip','config_interface','path_to_firmware'
 	    ];
 	 use Searchable;
 	 public function searchableAs()

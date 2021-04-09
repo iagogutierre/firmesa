@@ -2,9 +2,15 @@
 
 namespace App\Http\Controllers;
 
+
+use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Http\Request;
 use App\Firmware;
-use App\MeshNetwork;
+use App\Equipment;
+use App\User; 
+use Illuminate\Support\Facades\Gate;
+
 class HomeController extends Controller
 {
     /**
@@ -24,8 +30,17 @@ class HomeController extends Controller
      */
     public function index()
     {
-        $firmwares = Firmware::all();
-        $networks = MeshNetwork::all();
-        return view('home', compact('firmwares', 'networks'));
+        // $firmwares = Equipment::join('firmware','equipment.id', '=', 'firmware.equipment_id')
+        //                         ->get(['equipment.id','equipment.model', 'firmware.name', 'firmware.version', 'firmware.id']);
+
+       
+        // $firmwares = Firmware::all();
+        //$equipamentos = Equipment::all();
+        $equipamentos = DB::table('equipment')->where('user_id', Auth::id())->get();
+
+        $firmwares = Equipment::join('firmware','equipment.id', '=', 'firmware.equipment_id')
+                                ->get(['equipment.id','equipment.model', 'firmware.name', 'firmware.version', 'firmware.id']);
+        $usuarios = User::all();
+        return view('home', compact('firmwares', 'equipamentos', 'usuarios'));
     }
 }

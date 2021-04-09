@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Firmware;
+use App\Equipment;
 use App\MeshNetwork;
 
 class WelcomeController extends Controller
@@ -17,8 +18,8 @@ class WelcomeController extends Controller
     {
         //
         $firmwares = Firmware::all();
-        $networks = MeshNetwork::all();
-        return view('welcome', compact('firmwares', 'networks'));
+        $equipments = Equipment::all();
+        return view('welcome', compact('firmwares', 'equipments'));
     }
 
     /**

@@ -12,7 +12,7 @@ use Symfony\Component\Process\Process;
 
 
 use App\Firmware;
-
+use App\Equipment;
 
 use Validator;
 class FirmwareController extends Controller
@@ -25,11 +25,18 @@ class FirmwareController extends Controller
     public function index()
     {
         //
-        // $firmwares = Firmware::all();
+        $firmwares = Firmware::all();
         // $user_id  = Auth::id();
-        $firmwares = DB::table('firmware')->get();
+       /// $firmwares = DB::table('firmware')->get();
 
         return view('firmwares.index', compact('firmwares'));
+    }
+
+    public function firmList()
+    {
+        $firmwares = DB::table('firmwares')->select('*');
+        return datatables()->of($firmwares)
+            ->make(true);
     }
 
     /**
@@ -40,13 +47,14 @@ class FirmwareController extends Controller
     public function create()
     {
         //
-        return view('firmwares.create');
+        $equipamentos = Equipment::all();
+        return view('firmwares.create', compact('equipamentos'));
     }
 
-    public function listar()
-    {
-        $firmwares = DB::table('firmware')->get();
-        return $firmwares;
+  
+    public function lista(){
+        $firmwares = Firmware::paginate(10);
+        return \Response::json($firmwares, 200);
     }
 
     /**
@@ -63,19 +71,29 @@ class FirmwareController extends Controller
         // $logo = $request->file('logo')->isValid();
 
         $namefile = null;
-        if($request->hasFile('logo') && $request->file('logo')->isValid()){
-            $name = uniqid(date('HisYmd'));
-            $ext = $request->logo->getClientOriginalExtension();
-            $namefile = "{$name}.{$ext}";
-            $upload = $request->logo->move(public_path('logos'), $namefile);
-            //$upload =$request->logo->storeAs('logos', $namefile);
-            $path_to_logo = "logos/".$namefile;
+        $name = uniqid(date('HisYmd'));
+        $request->validate([
+            'version'=>'required',
+            'name'=>'required',
+            'ip'=>'required',
+            'config_interface'=>'required',
 
-            if(!$upload)
-                return redirect()
-                        ->back()
-                        ->with('error','Falha no upload');
-        }
+        ]);
+        
+        // if($request->hasFile('logo') && $request->file('logo')->isValid()){
+        //     $name = uniqid(date('HisYmd'));
+        //     $ext = $request->logo->getClientOriginalExtension();
+        //     $namefile = "{$name}.{$ext}";
+        //     $upload = $request->logo->move(public_path('logos'), $namefile);
+        //     //$upload =$request->logo->storeAs('logos', $namefile);
+        //     $path_to_logo = "logos/".$namefile;
+
+        //     if(!$upload)
+        //         return redirect()
+        //                 ->back()
+        //                 ->with('error','Falha no upload');
+        // }
+        
         if($request->hasFile('firmwarezip') && $request->file('firmwarezip')->isValid()){
             if($request->firmwarezip->getClientOriginalExtension() == "zip"){
                 $upload = $request->file('firmwarezip')->storeAs('firmwares', $name.".zip");
@@ -83,31 +101,20 @@ class FirmwareController extends Controller
             }
         }
         
-        $request->validate([
-            'version'=>'required'
-        ]);
+      
 
         $firmware = new Firmware([
             'user_id'=>$user_id,
-            'manufacture' => $request->get('manufacture'),
-            'model' => $request->get('model'),
+            'equipment_id'=>$request->get('equipment_id'),
+            'name'=> $request->get('name'),
             'version'=>$request->get('version'),
-            'potency'=> $request->get('potency'),
-            'antenna'=>$request->get('antenna'),
-            'range'=>$request->get('range'),
-            'band'=>$request->get('band'),
-            'wan'=>$request->get('wan'),
-            'memory'=>$request->get('memory'),
+            'description'=>$request->get('description'),
             'ip'=>$request->get('ip'),
             'config_interface'=>$request->get('config_interface'),
-            'path_to_logo'=>$path_to_logo,
             'path_to_firmware'=>$path_to_firmware,
-
-            'logo' =>$namefile,
-
         ]);
         $firmware->save();
-        return redirect('/')->with('success', 'Salvo com sucesso');
+        return redirect('/home/')->with('success', 'Salvo com sucesso');
     }
 
     /**
@@ -131,7 +138,6 @@ class FirmwareController extends Controller
      */
     public function edit($id)
     {
-        //
         $firm = Firmware::find($id);
         return view('firmwares.edit', compact('firm'));
     }
@@ -145,13 +151,12 @@ class FirmwareController extends Controller
      */
     public function update(Request $request, $id)
     {
-        $user_id  = Auth::id();
+        $user_id  = Auth::id(); //carrega o usuario 
+        $firm =  Firmware::find($id); // carrega o firmware 
 
-        $logo = $request->hasFile('logo');
-        $logo = $request->file('logo')->isValid();
-
-        $namefile = null;
+        //se algum logo for carregado
         if($request->hasFile('logo') && $request->file('logo')->isValid()){
+            $namefile = null;
             $name = uniqid(date('HisYmd'));
             $ext = $request->logo->getClientOriginalExtension();
             $namefile = "{$name}.{$ext}";
@@ -162,21 +167,21 @@ class FirmwareController extends Controller
                 return redirect()
                         ->back()
                         ->with('error','Falha no upload');
+        }else{
+            dd($firm->path_to_logo);
         }
 
         //
         $request->validate([
             'version'=>'required',
             'model'=>'required',
-            'architeture'=>'required',
             'manufacture'=>'required'
         ]);
 
-        $firm =  Firmware::find($id);
+        
         $firm->name = $request->get('name');
         $firm->version = $request->get('version');
         $firm->model = $request->get('model');
-        $firm->architeture = $request->get('architeture');
         $firm->manufacture = $request->get('manufacture');
         $firm->logo = $namefile;
 
@@ -199,12 +204,9 @@ class FirmwareController extends Controller
         //
         $firm = Firmware::find($id);
         
-        
-        //dd(unlink(public_path("logos/002252202002095e3f50dc4338d.jpg")));
-        //dd(unlink(public_path("logos/161134202002195e4d5e3695073.png")));
-        //unlink(public_path($firm->path_to_logo));# remove o arquivo de firmware 
-        unlink(public_path($firm->path_to_logo)); # remove arquivo de firmware
-        unlink(public_path('app/public/firmwares/'.$firm->path_to_firmware)); #remove firmware 
+        unlink(public_path($firm->path_to_logo)); # remove logo do firmware
+        unlink(public_path('pdf/'.$firm->model.'.pdf')); # remove o manual
+        Storage::delete('firmwares/'.$firm->path_to_firmware); #remove firmware 
         $firm->delete();
 
         return redirect('/firmwares')->with('success', 'Firmware deletado');

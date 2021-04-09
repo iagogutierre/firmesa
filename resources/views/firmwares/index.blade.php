@@ -7,7 +7,7 @@
 <div class="row">
 <div class="col-sm-12">
 
-  <h1 class="display-3">Firmwares</h1>  
+  <h1>Firmwares <a class="btn icon-btn btn-success" style="float:right;" href="{{ url('firmwares/cadastrar') }}"><span class="glyphicon btn-glyphicon glyphicon-plus img-circle text-success"></span>Adicionar</a></h1>  
     <div class="col-sm-12">
       @if(session()->get('success'))
         <div class="alert alert-success">
@@ -26,7 +26,7 @@
     <tbody>
         @foreach($firmwares as $firm)
         <tr>
-            <td>{{$firm->model}}</td>
+            <td>{{$firm->name}}</td>
             <td>{{$firm->version}}</td>
             <td>
                 <a href="{{ route('firmwares.edit',$firm->id)}}" class="btn-sm btn-primary">Editar</a>
@@ -42,7 +42,9 @@
         @endforeach
     </tbody>
   </table>
+ 
 <div>
+   
 </div>
 @endsection
 </div>

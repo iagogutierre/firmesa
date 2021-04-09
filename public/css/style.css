@@ -1,1 +1,6 @@
+div#buscador{position: relative;top:10px;}
+
+div.style-firm{margin-bottom: 30px; padding: 30px; border:1px solid #dee2e6; background:#f2f2f2}
+
 ul#resultados{position: absolute; z-index: 1000}
+

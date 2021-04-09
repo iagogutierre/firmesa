@@ -17,21 +17,18 @@ class CreateFirmwareTable extends Migration
             $table->bigIncrements('id');
             $table->timestamps();
             $table->bigInteger('user_id')->unsigned();
-            $table->string('model');
+            $table->bigInteger('equipment_id')->unsigned();
+            $table->string('name');
             $table->string('version');
-            $table->string('manufacture');
-            $table->string('potency');
-            $table->string('antenna');
-            $table->string('range');
-            $table->string('band');
-            $table->string('wan');
-            $table->string('memory');
+            $table->text('description');
             $table->string('ip');
             $table->string('config_interface');
-            $table->string('path_to_logo');
             $table->string('path_to_firmware');
             $table->foreign('user_id')
                     ->references('id')->on('users')
+                    ->onDelete('cascade');
+            $table->foreign('equipment_id')
+                    ->references('id')->on('equipment')
                     ->onDelete('cascade');
 
         });

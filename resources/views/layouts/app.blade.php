@@ -19,14 +19,27 @@
     <!-- Styles -->
     <link href="{{ asset('css/app.css') }}" rel="stylesheet">
     <link href="{{ asset('css/style.css') }}" rel="stylesheet">
+    <script src="/dist/bundle.js"></script>
+    <link rel="stylesheet" 
+      href="https://use.fontawesome.com/releases/v5.3.1/css/all.css" 
+      integrity="sha384-mzrmE5qonljUremFsqc01SB46JvROS7bZs3IO2EmfFsd15uHvIt+Y8vEf7N7fWAU"
+      crossorigin="anonymous">
 
+    <script src="{{ asset('node_modules/tinymce/tinymce.js') }}"></script>
+    <script>
+        tinymce.init({
+            selector:'textarea#description',
+            width: 900,
+            height: 300
+        });
+    </script>  
 </head>
 <body>
     <div id="app">
         <nav class="navbar navbar-expand-md navbar-light bg-white shadow-sm">
             <div class="container">
                 <a class="navbar-brand" href="{{ url('/') }}">
-                  Firmesa
+                  <img src="{{asset('icons/firmesalogo.png')}}">
                 </a>
                 <div id="buscador">
                     <div class="form-group">
@@ -67,16 +80,20 @@
                             </li>
                             @if (Route::has('register'))
                                 <li class="nav-item">
-                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Register') }}</a>
+                                    <a class="nav-link" href="{{ route('register') }}">{{ __('Cadastrar') }}</a>
                                 </li>
                             @endif
                         @else
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('firmware.cadastrar.index') }}">Cadastrar Firmware</a>
+                                <a class="nav-link" href="{{ url('equipamentos') }}">Equipamentos</a>
                             </li>
                             <li class="nav-item">
-                                <a class="nav-link" href="{{ route('mesh.cadastrar.index') }}">Cadastrar Rede</a>
+                                <a class="nav-link" href="{{ url('firmwares') }}">Firmwares</a>
                             </li>
+                            <li class="nav-item">
+                                <a class="nav-link" href="{{ url('sysadmins') }}">Usuarios</a>
+                            </li>
+                            
                             <li class="nav-item dropdown">
                                 <a id="navbarDropdown" class="nav-link dropdown-toggle" href="#" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" v-pre>
                                     {{ Auth::user()->name }} <span class="caret"></span>
@@ -87,6 +104,11 @@
                                        onclick="event.preventDefault();
                                                      document.getElementById('logout-form').submit();">
                                         {{ __('Logout') }}
+                                    </a>
+                                    <a class="dropdown-item" href="{{ route('logout') }}"
+                                       onclick="event.preventDefault();
+                                                     document.getElementById('logout-form').submit();">
+                                        {{ __('Perfil') }}
                                     </a>
                                     <form id="logout-form" action="{{ route('logout') }}" method="POST" style="display: none;">
                                         @csrf
